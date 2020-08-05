@@ -19,7 +19,7 @@ namespace Blaggard.Tests
         [Fact]
         public void ReturnsExpected()
         {
-            var matrix = new NeighborMatrix(new Vec2(1, 1), (origin) => testData[Util.IndexFromVec2(origin, 5)] == 1);
+            var matrix = new NeighborMatrix(new Vec2(1, 1), (origin) => testData[origin.ToIndex(5)] == 1);
 
             Assert.True(matrix.IsSet(1 + 2 + 4));
             Assert.False(matrix.IsSet(8 + 128));
@@ -29,7 +29,7 @@ namespace Blaggard.Tests
         [Fact]
         public void SpecificScenario()
         {
-            var matrix = new NeighborMatrix(new Vec2(1, 1), (origin) => testData[Util.IndexFromVec2(origin, 5)] == 1);
+            var matrix = new NeighborMatrix(new Vec2(1, 1), (origin) => testData[origin.ToIndex(5)] == 1);
 
             Assert.False(matrix.IsSet(1 + 2 + 4 + 8 + 128));
         }

@@ -12,7 +12,7 @@ namespace Blaggard.Tests
         [Fact]
         public void ColoredString_StringAddition()
         {
-            var str = new ColoredString("Hel", Color.blue) + new ColoredString("lo", Color.green);
+            var str = new ColoredString("Hel", Color.white) + new ColoredString("lo", Color.black);
             str += " ";
             str += "World!";
 
