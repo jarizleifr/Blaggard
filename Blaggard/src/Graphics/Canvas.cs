@@ -190,14 +190,21 @@ namespace Blaggard.Graphics
 
         public void Render()
         {
-            display.SetRenderTarget(Texture);
-            display.ClearTexture();
-            foreach (var sprite in sprites.OrderBy(s => s.zIndex))
+            if (Dirty)
             {
-                display.DrawSprite(sprite);
-            }
+                display.SetRenderTarget(Texture);
+                display.ClearTexture();
 
-            Dirty = false;
+                if (sprites.Count > 0)
+                {
+                    foreach (var sprite in sprites.OrderBy(s => s.zIndex))
+                    {
+                        display.DrawSprite(sprite);
+                    }
+                }
+
+                Dirty = false;
+            }
         }
     }
 
@@ -233,13 +240,16 @@ namespace Blaggard.Graphics
         ///<summary>Render canvas cells to owned texture.</summary>
         public void Render()
         {
-            display.SetRenderTarget(Texture);
-            display.ClearTexture();
-            foreach ((var pos, var cell) in cells)
+            if (Dirty)
             {
-                display.DrawCell(pos.x, pos.y, cell.ch, cell.fore, cell.back);
+                display.SetRenderTarget(Texture);
+                display.ClearTexture();
+                foreach ((var pos, var cell) in cells)
+                {
+                    display.DrawCell(pos.x, pos.y, cell.ch, cell.fore, cell.back);
+                }
+                Dirty = false;
             }
-            Dirty = false;
         }
     }
 
@@ -288,22 +298,27 @@ namespace Blaggard.Graphics
         ///<summary>Render canvas cells to owned texture.</summary>
         public void Render()
         {
-            display.SetRenderTarget(Texture);
-            for (int y = 0; y < Height; y++)
+            if (Dirty)
             {
-                for (int x = 0; x < Width; x++)
+                display.SetRenderTarget(Texture);
+                for (int y = 0; y < Height; y++)
                 {
-                    var c = cells[Util.IndexFromXY(x, y, Width)];
-                    display.DrawCell(x, y, c.ch, c.fore, c.back);
+                    for (int x = 0; x < Width; x++)
+                    {
+                        var c = cells[Util.IndexFromXY(x, y, Width)];
+                        display.DrawCell(x, y, c.ch, c.fore, c.back);
+                    }
                 }
-            }
 
-            foreach (var sprite in sprites.OrderBy(s => s.zIndex))
-            {
-                display.DrawSprite(sprite);
+                if (sprites.Count > 0)
+                {
+                    foreach (var sprite in sprites.OrderBy(s => s.zIndex))
+                    {
+                        display.DrawSprite(sprite);
+                    }
+                }
+                Dirty = false;
             }
-
-            Dirty = false;
         }
     }
 }
