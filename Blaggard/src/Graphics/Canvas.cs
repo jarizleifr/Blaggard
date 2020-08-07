@@ -175,8 +175,11 @@ namespace Blaggard.Graphics
 
         public SpriteCanvas(Display display, int width, int height) : base(display, width, height) { }
 
-        public void Clear() => sprites.Clear();
-
+        public void Clear()
+        {
+            sprites.Clear();
+            Dirty = true;
+        }
         public void SetRenderPosition(int screenX, int screenY)
         {
             RenderRect = new Rect(screenX * display.CellWidth, screenY * display.CellHeight, Width * display.CellWidth, Height * display.CellHeight);
@@ -185,8 +188,11 @@ namespace Blaggard.Graphics
         public void SetCell(int x, int y, char? ch, Color? fore, Color? back) =>
             throw new Exception("Cannot draw cells on SpriteCanvas!");
 
-        public void DrawSprite(Sprite sprite) => sprites.Add(sprite);
-
+        public void DrawSprite(Sprite sprite)
+        {
+            sprites.Add(sprite);
+            Dirty = true;
+        }
 
         public void Render()
         {
@@ -217,6 +223,7 @@ namespace Blaggard.Graphics
             cells = new Dictionary<Vec2, Cell>();
             SDL.SDL_SetTextureBlendMode(Texture, SDL.SDL_BlendMode.SDL_BLENDMODE_BLEND);
             ResetColors();
+            Dirty = true;
         }
 
         public void SetRenderPosition(int screenX, int screenY)
@@ -234,6 +241,7 @@ namespace Blaggard.Graphics
                 cells[pos] = (cells.TryGetValue(pos, out var cell))
                     ? new Cell(ch ?? cell.ch, fore ?? cell.fore, back ?? cell.back)
                     : new Cell(ch ?? ' ', fore ?? DefaultFore, back ?? DefaultBack);
+                Dirty = true;
             }
         }
 
@@ -262,6 +270,7 @@ namespace Blaggard.Graphics
         {
             ResetColors();
             Clear();
+            Dirty = true;
         }
 
         public void SetRenderPosition(int screenX, int screenY)
@@ -273,6 +282,7 @@ namespace Blaggard.Graphics
         {
             cells = Enumerable.Repeat(new Cell(' ', DefaultFore, DefaultBack), Width * Height).ToArray();
             sprites.Clear();
+            Dirty = true;
         }
 
         public void SetCell(int x, int y, char? ch, Color? fore, Color? back)
