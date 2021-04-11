@@ -3,15 +3,15 @@ using System;
 namespace Blaggard {
   public struct NeighborMatrix {
     private static readonly Vec2[] matrixTransforms = {
-            new Vec2(-1,-1),
-            new Vec2( 0,-1),
-            new Vec2( 1,-1),
-            new Vec2( 1, 0),
-            new Vec2( 1, 1),
-            new Vec2( 0, 1),
-            new Vec2(-1, 1),
-            new Vec2(-1, 0),
-        };
+      new Vec2(-1,-1),
+      new Vec2( 0,-1),
+      new Vec2( 1,-1),
+      new Vec2( 1, 0),
+      new Vec2( 1, 1),
+      new Vec2( 0, 1),
+      new Vec2(-1, 1),
+      new Vec2(-1, 0),
+    };
 
     private readonly byte bits;
 

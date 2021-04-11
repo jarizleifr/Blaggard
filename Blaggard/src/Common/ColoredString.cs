@@ -3,13 +3,13 @@ using System.Runtime.CompilerServices;
 namespace Blaggard {
   public class ColoredString {
     public string Text { get; init; }
-    public Color Color { get; init; }
+    public byte Color { get; init; }
 
     public int Length => Text.Length;
 
     public char this[int index] => Text[index];
 
-    public ColoredString(string text, Color color) =>
+    public ColoredString(string text, byte color) =>
         (Text, Color) = (text, color);
 
     public override string ToString() => Text;
@@ -19,7 +19,7 @@ namespace Blaggard {
     private readonly ColoredString[] arr;
     public int Length { get; private set; }
 
-    public ColoredTextSpan(string formattedText, Color defaultColor, params ColoredString[] args) {
+    public ColoredTextSpan(string formattedText, byte defaultColor, params ColoredString[] args) {
       var text = FormattableStringFactory.Create(formattedText, args);
       Length = text.ToString().Length;
 

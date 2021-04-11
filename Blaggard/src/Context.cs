@@ -1,33 +1,57 @@
-﻿using System;
 using static SDL2.SDL;
-using static SDL2.SDL_image;
 
 namespace Blaggard {
-  public abstract class Context : IDisposable {
-    private uint ticks;
+  public abstract class Context<TCommand> {
+    protected readonly Handler<TCommand> handler;
+    public IHandler<TCommand> Handler => handler;
+
+    public Display Display { get; protected set; }
+
+    protected readonly Timer timer;
+    public ITimer Timer => timer;
+
+    public RNG RNG { get; private set; }
+
+    public bool SkipNextFrame { get; set; }
+    public bool Running { get; protected set; }
+
     public Context() {
       SDL_Init(SDL_INIT_VIDEO);
-      IMG_Init(IMG_InitFlags.IMG_INIT_PNG);
+      SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
-      ticks = SDL_GetTicks();
+      handler = new();
+      timer = new();
+      RNG = new();
+
+      Initialize();
     }
 
-    public float GetDeltaTime() {
-      var now = SDL_GetTicks();
-      var deltaTime = (now - ticks) / 1000f;
-      ticks = now;
-      return deltaTime;
-    }
+    public abstract void Initialize();
+    public abstract void Tick();
 
-    public void WaitNextFrame(float time) {
-      SDL_Delay((uint)(time * 1000f));
-    }
+    public void RunMainLoop() {
+      Running = true;
+      while (Running) {
+        SDL_SetRenderDrawColor(Display.Renderer, 0, 0, 0, 255);
+        SDL_RenderClear(Display.Renderer);
+        handler.Handle();
 
-    public void Dispose() {
-      SDL_Quit();
-      Cleanup();
-    }
+        Tick();
 
-    public abstract void Cleanup();
+        if (!SkipNextFrame) {
+          SDL_RenderPresent(Display.Renderer);
+          timer.Measure();
+
+          if (Display.FrameRateMode > 0) {
+            var ticks = 1000u / (uint)Display.FrameRateMode - (uint)timer.MSPF;
+            if (ticks > 2000000) {
+              ticks = 0;
+            }
+            SDL_Delay(ticks);
+          }
+        }
+        SkipNextFrame = false;
+      }
+    }
   }
 }

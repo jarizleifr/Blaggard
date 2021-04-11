@@ -1,18 +1,17 @@
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Blaggard {
   public static class Util {
-    public static IEnumerable<int> GetNeighbors(int index, int width) {
-      yield return SouthWest(index, width);
-      yield return South(index, width);
-      yield return SouthEast(index, width);
-      yield return West(index);
-      yield return East(index);
-      yield return NorthWest(index, width);
-      yield return North(index, width);
-      yield return NorthEast(index, width);
-    }
+    public static int[] GetNeighbors(int index, int width) => new int[8] {
+      SouthWest(index, width),
+      South(index, width),
+      SouthEast(index, width),
+      West(index),
+      East(index),
+      NorthWest(index, width),
+      North(index, width),
+      NorthEast(index, width),
+    };
 
     private static int SouthWest(int i, int w) => i - 1 + w;
     private static int South(int i, int w) => i + w;

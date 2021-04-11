@@ -13,8 +13,7 @@ namespace Blaggard {
         var arr = (JArray)token;
         return new Color((byte)arr[0], (byte)arr[1], (byte)arr[2]);
       } else if (token.Type == JTokenType.Integer) {
-        var value = (int)token;
-        return new Color((byte)(value >> 16), (byte)(value >> 8 & 0xff), (byte)(value & 0xff));
+        return new Color((int)token);
       }
       throw new Exception("Couldn't convert");
     }
@@ -22,15 +21,13 @@ namespace Blaggard {
 
   [JsonConverter(typeof(ColorConverter))]
   public struct Color {
-    public readonly byte r;
-    public readonly byte g;
-    public readonly byte b;
+    public readonly byte r, g, b;
 
-    public Color(byte r, byte g, byte b) {
-      this.r = r;
-      this.g = g;
-      this.b = b;
-    }
+    public Color(byte r, byte g, byte b) =>
+      (this.r, this.g, this.b) = (r, g, b);
+
+    public Color(int val) =>
+      (r, g, b) = ((byte)(val >> 16), (byte)(val >> 8 & 0xff), (byte)(val & 0xff));
 
     public static readonly Color white = new(255, 255, 255);
     public static readonly Color black = new(0, 0, 0);

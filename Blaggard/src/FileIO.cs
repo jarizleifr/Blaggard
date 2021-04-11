@@ -5,13 +5,8 @@ using System.Text;
 
 namespace Blaggard {
   public struct JsonSave {
-    public readonly string entry;
-    public readonly string data;
-
-    public JsonSave(string entry, string data) {
-      this.entry = entry;
-      this.data = data;
-    }
+    public string Entry { get; init; }
+    public string Data { get; init; }
   }
 
   public static class ZipUtils {
@@ -19,14 +14,14 @@ namespace Blaggard {
       using FileStream file = new(path, FileMode.OpenOrCreate);
       using ZipArchive archive = new(file, ZipArchiveMode.Update);
       foreach (var save in jsonToSave) {
-        var entry = archive.GetEntry(save.entry);
+        var entry = archive.GetEntry(save.Entry);
         if (entry != null) {
           entry.Delete();
         }
-        entry = archive.CreateEntry(save.entry);
+        entry = archive.CreateEntry(save.Entry);
 
         using Stream s = entry.Open();
-        s.Write(Encoding.UTF8.GetBytes(save.data));
+        s.Write(Encoding.UTF8.GetBytes(save.Data));
       }
     }
 
